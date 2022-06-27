@@ -1,0 +1,29 @@
+#how-to-get-perl 如何获得 Perl
+#terms 术语
+#documentation 文档
+strings 字符串
+numbers 数字
+arrays 数组
+hashes 哈希
+regexes 正则表达式
+flow-control 流程控制
+files 文件
+subroutines 子例程
+pod POD 格式
+debugging 调试
+modules 模块
+external-programs 外部程序
+cpan CPAN
+constructs 构造
+references 引用
+objects 对象、模块及包
+special-variables 特殊变量
+command-line-switches 命令行选项
+advanced-functions 高级函数
+style 风格
+performance 性能
+traps 陷阱
+how-do-i 如何做...
+developer-tools 开发工具
+#publications 出版物
+#community 社区

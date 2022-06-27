@@ -1,0 +1,377 @@
+Ten Essential Development Practices
+1. Design the module’s interface first.
+[Chapter 17: Interfaces]
+2. Write the test cases before the code.
+[Chapter 18: Test Cases]
+3. Create standard POD templates for modules and applications.
+[Chapter 7: Boilerplates]
+4. Use a revision control system.
+[Chapter 19: Revision Control]
+5. Create consistent command-line and configuration interfaces.
+[Chapter 14: Command-Line Structure, Chapter 19: Configuration Files]
+6. Agree upon a coherent layout style and automate it with perltidy.
+[Chapter 2: Automated Layout]
+7. Code in commented paragraphs.
+[Chapter 2: Chunking]
+8. Throw exceptions instead of returning special values or setting flags.
+[Chapter 13: Exceptions]
+9. Add new test cases before you start debugging.
+[Chapter 18: Debugging and Testing]
+10. Don’t optimize code—benchmark it.
+[Chapter 19: Benchmarking]
+
+
+Ten Essential Coding Practices
+1. Always use strict and use warnings.
+[Chapter 18: Strictures, Warnings]
+2. Use grammatical templates when forming identifiers.
+[Chapter 3: Identifiers, Booleans, Reference Variables, Arrays and Hashes]
+3. Use lexical variables, not package variables.
+[Chapter 5: Lexical Variables]
+4. Label every loop that is exited explicitly, and every next, last, or redo.
+[Chapter 6: Loop Labels]
+5. Don’t use bareword filehandles; use indirect filehandles.
+[Chapter 10: Filehandles, Indirect Filehandles]
+6. In a subroutine, always unpack @_ first, using a hash of named arguments if
+there are more than three parameters.
+[Chapter 9: Argument Lists, Named Arguments]
+7. Always return via an explicit return.
+[Chapter 9: Implicit Returns]
+8. Always use the /x ,/m , and /s flags, and the \A and \z anchors.
+[Chapter 12: Extended Formatting, Line Boundaries, Matching Anything, String
+Boundaries]
+9. Use capturing parentheses in regexes only when deliberately capturing, then give
+the captured substrings proper names.
+[Chapter 12: Capturing Parentheses, Capture Variables]
+10. Never make variables part of a module’s interface.
+[Chapter 17: Interface Variables]
+
+
+Ten Essential Module Practices
+1. Write tests using the Test::Simple or Test::More modules.
+[Chapter 18: Modular Testing]
+2. use English for the less familiar punctuation variables.
+[Chapter 5: Punctuation Variables]
+3. Use named constants created with the Readonly module.
+[Chapter 4: Constants]
+4. Use the “non-builtin builtins” from Scalar::Util, List::Util, and List::
+MoreUtils.
+[Chapter 8: Utilities]
+5. Use IO::Prompt when prompting for interactive input.
+[Chapter 10: Simple Prompting, Power Prompting]
+6. Use the Carp and Exception::Class modules to create OO exceptions that report
+from the caller’s location.
+[Chapter 13: Reporting Failure, Exception Classes]
+7. Use the Fatal module to make builtins throw exceptions on failure.
+[Chapter 13: Builtin Failures, Contextual Failure]
+8. Create aliases using the Data::Alias or Lexical::Alias module.
+[Chapter 6: Necessary Subscripting]
+9. Use Regexp::Common instead of writing your own regexes.
+[Chapter 12: Canned Regexes]
+10. Use the Class::Std module to create properly encapsulated classes.
+[Chapter 16: Automating Class Hierarchies, Attribute Demolition, Attribute Building]
+
+
+
+This appendix lists the complete set of 256 guidelines presented in this book. The sec
+tion heading under which each guideline appears is also provided in square brackets.
+Chapter 2, Code Layout
+• Brace and parenthesize in K&R style. [Bracketing]
+• Separate your control keywords from the following opening bracket. [Keywords]
+• Don’t separate subroutine or variable names from the following opening
+bracket. [Subroutines and Variables]
+• Don’t use unnecessary parentheses for builtins and “honorary” builtins. [Builtins]
+• Separate complex keys or indices from their surrounding brackets. [Keys and
+Indices]
+• Use whitespace to help binary operators stand out from their operands. [Operators]
+• Place a semicolon after every statement. [Semicolons]
+• Place a comma after every value in a multiline list. [Commas]
+• Use 78-column lines. [Line Lengths]
+• Use four-column indentation levels. [Indentation]
+• Indent with spaces, not tabs. [Tabs]
+• Never place two statements on the same line. [Blocks]
+• Code in paragraphs. [Chunking]
+• Don’t cuddle an else. [Elses]
+• Align corresponding items vertically. [Vertical Alignment]
+• Break long expressions before an operator. [Breaking Long Lines]
+• Factor out long expressions in the middle of statements. [Non-Terminal
+Expressions]
+• Always break a long expression at the operator of the lowest possible prece
+dence. [Breaking by Precedence]
+
+• Break long assignments before the assignment operator. [Assignments]
+• Format cascaded ternary operators in columns. [Ternaries]
+• Parenthesize long lists. [Lists]
+• Enforce your chosen layout style mechanically. [Automated Layout]
+Chapter 3, Naming Conventions
+• Use grammatical templates when forming identifiers. [Identifiers]
+• Name booleans after their associated test. [Booleans]
+• Mark variables that store references with a _ref suffix. [Reference Variables]
+• Name arrays in the plural and hashes in the singular. [Arrays and Hashes]
+• Use underscores to separate words in multiword identifiers. [Underscores]
+• Distinguish different program components by case. [Capitalization]
+• Abbr idents by prefx. [Abbreviations]
+• Abbreviate only when the meaning remains unambiguous. [Ambiguous Abbrevi
+ations]
+• Avoid using inherently ambiguous words in names. [Ambiguous Names]
+• Prefix “for internal use only” subroutines with an underscore. [Utility Subroutines]
+Chapter 4, Values and Expressions
+• Use interpolating string delimiters only for strings that actually interpolate.
+[String Delimiters]
+• Don’t use "" or '' for an empty string. [Empty Strings]
+• Don’t write one-character strings in visually ambiguous ways. [Single-Character
+Strings]
+• Use named character escapes instead of numeric escapes. [Escaped Characters]
+• Use named constants, but don’t use constant. [Constants]
+• Don’t pad decimal numbers with leading zeros. [Leading Zeros]
+• Use underscores to improve the readability of long numbers. [Long Numbers]
+• Lay out multiline strings over multiple lines. [Multiline Strings]
+• Use a heredoc when a multiline string exceeds two lines. [Here Documents]
+• Use a “theredoc” when a heredoc would compromise your indentation. [Heredoc
+Indentation]
+• Make every heredoc terminator a single uppercase identifier with a standard pre
+fix. [Heredoc Terminators]
+• When introducing a heredoc, quote the terminator. [Heredoc Quoters]
+• Don’t use barewords. [Barewords]
+• Reserve => for pairs. [Fat Commas]
+• Don’t use commas to sequence statements. [Thin Commas]
+• Don’t mix high- and low-precedence booleans. [Low-Precedence Operators]
+• Parenthesize every raw list. [Lists]
+• Use table-lookup to test for membership in lists of strings; use any( ) for mem
+bership of lists of anything else. [List Membership]
+Chapter 5, Variables
+• Avoid using non-lexical variables. [Lexical Variables]
+• Don’t use package variables in your own development. [Package Variables]
+• If you’re forced to modify a package variable, localize it. [Localization]
+• Initialize any variable you localize. [Initialization]
+• use English for the less familiar punctuation variables. [Punctuation Variables]
+• If you’re forced to modify a punctuation variable, localize it. [Localizing Punctu
+ation Variables]
+• Don’t use the regex match variables. [Match Variables]
+• Beware of any modification via $_. [Dollar-Underscore]
+• Use negative indices when counting from the end of an array. [Array Indices]
+• Take advantage of hash and array slicing. [Slicing]
+• Use a tabular layout for slices. [Slice Layout]
+• Factor large key or index lists out of their slices. [Slice Factoring]
+Chapter 6, Control Structures
+• Use block if, not postfix if. [If Blocks]
+• Reserve postfix if for flow-of-control statements. [Postfix Selectors]
+• Don’t use postfix unless, for, while, or until. [Other Postfix Modifiers]
+• Don’t use unless or until at all. [Negative Control Statements]
+• Avoid C-style for statements. [C-Style Loops]
+• Avoid subscripting arrays or hashes within loops. [Unnecessary Subscripting]
+• Never subscript more than once in a loop. [Necessary Subscripting]
+• Use named lexicals as explicit for loop iterators. [Iterator Variables]
+• Always declare a for loop iterator variable with my. [Non-Lexical Loop Iterators]
+• Use map instead of for when generating new lists from old. [List Generation]
+• Use grep and first instead of for when searching for values in a list. [List Selec
+tions]
+• Use for instead of map when transforming a list in place. [List Transformation]
+
+
+• Use a subroutine call to factor out complex list transformations. [Complex
+Mappings]
+• Never modify $_ in a list function. [List Processing Side Effects]
+• Avoid cascading an if. [Multipart Selections]
+• Use table look-up in preference to cascaded equality tests. [Value Switches]
+• When producing a value, use tabular ternaries. [Tabular Ternaries]
+• Don’t use do...while loops. [do-while Loops]
+• Reject as many iterations as possible, as early as possible. [Linear Coding]
+• Don’t contort loop structures just to consolidate control. [Distributed Control]
+• Use for and redo instead of an irregularly counted while. [Redoing]
+• Label every loop that is exited explicitly, and use the label with every next, last,
+or redo. [Loop Labels]
+Chapter 7, Documentation
+• Distinguish user documentation from technical documentation. [Types of
+Documentation]
+• Create standard POD templates for modules and applications. [Boilerplates]
+• Extend and customize your standard POD templates. [Extended Boilerplates]
+• Put user documentation in source files. [Location]
+• Keep all user documentation in a single place within your source file. [Contiguity]
+• Place POD as close as possible to the end of the file. [Position]
+• Subdivide your technical documentation appropriately. [Technical Documentation]
+• Use block templates for major comments. [Comments]
+• Use full-line comments to explain the algorithm. [Algorithmic Documentation]
+• Use end-of-line comments to point out subtleties and oddities. [Elucidating
+Documentation]
+• Comment anything that has puzzled or tricked you. [Defensive Documentation]
+• Consider whether it’s better to rewrite than to comment. [Indicative Documenta
+tion]
+• Use “invisible” POD sections for longer technical discussions. [Discursive
+Documentation]
+• Check the spelling, syntax, and sanity of your documentation. [Proofreading]
+Chapter 8, Built-in Functions
+• Don’t recompute sort keys inside a sort. [Sorting]
+• Use reverse to reverse a list. [Reversing Lists]
+• Use scalar reverse to reverse a scalar. [Reversing Scalars]
+• Use unpack to extract fixed-width fields. [Fixed-Width Data]
+• Use split to extract simple variable-width fields. [Separated Data]
+• Use Text::CSV_XS to extract complex variable-width fields. [Variable-Width Data]
+• Avoid string eval. [String Evaluations]
+• Consider building your sorting routines with Sort::Maker. [Automating Sorts]
+• Use 4-arg substr instead of lvalue substr. [Substrings]
+• Make appropriate use of lvalue values. [Hash Values]
+• Use glob, not <...>. [Globbing]
+• Avoid a raw select for non-integer sleeps. [Sleeping]
+• Always use a block with a map and grep. [Mapping and Grepping]
+• Use the “non-builtin builtins”. [Utilities]
+Chapter 9, Subroutines
+• Call subroutines with parentheses but without a leading &. [Call Syntax]
+• Don’t give subroutines the same names as built-in functions. [Homonyms]
+• Always unpack @_ first. [Argument Lists]
+• Use a hash of named arguments for any subroutine that has more than three
+parameters. [Named Arguments]
+• Use definedness or existence to test for missing arguments. [Missing Arguments]
+• Resolve any default argument values as soon as @_ is unpacked. [Default Argu
+ment Values]
+• Always return scalar in scalar returns. [Scalar Return Values]
+• Make list-returning subroutines return the “obvious” value in scalar context.
+[Contextual Return Values]
+• When there is no “obvious” scalar context return value, consider Contextual::
+Return instead. [Multi-Contextual Return Values]
+• Don’t use subroutine prototypes. [Prototypes]
+• Always return via an explicit return. [Implicit Returns]
+• Use a bare return to return failure. [Returning Failure]
+Chapter 10, I/O
+• Don’t use bareword filehandles. [Filehandles]
+• Use indirect filehandles. [Indirect Filehandles]
+• If you have to use a package filehandle, localize it first. [Localizing Filehandles]
+
+• Use either the IO::File module or the three-argument form of open. [Opening
+Cleanly]
+• Never open, close, or print to a file without checking the outcome. [Error
+Checking]
+• Close filehandles explicitly, and as soon as possible. [Cleanup]
+• Use while (<>), not for (<>). [Input Loops]
+• Prefer line-based I/O to slurping. [Line-Based Input]
+• Slurp a filehandle with a do block for purity. [Simple Slurping]
+• Slurp a stream with Perl6::Slurp for power and simplicity. [Power Slurping]
+• Avoid using *STDIN, unless you really mean it. [Standard Input]
+• Always put filehandles in braces within any print statement. [Printing to File
+handles]
+• Always prompt for interactive input. [Simple Prompting]
+• Don’t reinvent the standard test for interactivity. [Interactivity]
+• Use the IO::Prompt module for prompting. [Power Prompting]
+• Always convey the progress of long non-interactive operations within interactive
+applications. [Progress Indicators]
+• Consider using the Smart::Comments module to automate your progress indica
+tors. [Automatic Progress Indicators]
+• Avoid a raw select when setting autoflushes. [Autoflushing]
+Chapter 11, References
+• Wherever possible, dereference with arrows. [Dereferencing]
+• Where prefix dereferencing is unavoidable, put braces around the reference.
+[Braced References]
+• Never use symbolic references. [Symbolic References]
+• Use weaken to prevent circular data structures from leaking memory. [Cyclic
+References]
+Chapter 12, Regular Expressions
+• Always use the /x flag. [Extended Formatting]
+• Always use the /m flag. [Line Boundaries]
+• Use \A and \z as string boundary anchors. [String Boundaries]
+• Use \z, not \Z, to indicate “end of string”. [End of String]
+• Always use the /s flag. [Matching Anything]
+• Consider mandating the Regexp::Autoflags module. [Lazy Flags]
+• Use m{...} in preference to /.../ in multiline regexes. [Brace Delimiters]
+• Don’t use any delimiters other than /.../ or m{...}. [Other Delimiters]
+• Prefer singular character classes to escaped metacharacters. [Metacharacters]
+• Prefer named characters to escaped metacharacters. [Named Characters]
+• Prefer properties to enumerated character classes. [Properties]
+• Consider matching arbitrary whitespace, rather than specific whitespace charac
+ters. [Whitespace]
+• Be specific when matching “as much as possible”. [Unconstrained Repetitions]
+• Use capturing parentheses only when you intend to capture. [Capturing Paren
+theses]
+• Use the numeric capture variables only when you’re sure that the preceding
+match succeeded. [Captured Values]
+• Always give captured substrings proper names. [Capture Variables]
+• Tokenize input using the /gc flag. [Piecewise Matching]
+• Build regular expressions from tables. [Tabular Regexes]
+• Build complex regular expressions from simpler pieces. [Constructing Regexes]
+• Consider using Regexp::Common instead of writing your own regexes. [Canned
+Regexes]
+• Always use character classes instead of single-character alternations. [Alternations]
+• Factor out common affixes from alternations. [Factoring Alternations]
+• Prevent useless backtracking. [Backtracking]
+• Prefer fixed-string eq comparisons to fixed-pattern regex matches. [String
+Comparisons]
+Chapter 13, Error Handling
+• Throw exceptions instead of returning special values or setting flags. [Exceptions]
+• Make failed builtins throw exceptions too. [Builtin Failures]
+• Make failures fatal in all contexts. [Contextual Failure]
+• Be careful when testing for failure of the system builtin. [Systemic Failure]
+• Throw exceptions on all failures, including recoverable ones. [Recoverable Failure]
+• Have exceptions report from the caller’s location, not from the place where they
+were thrown. [Reporting Failure]
+• Compose error messages in the recipient’s dialect. [Error Messages]
+• Document every error message in the recipient’s dialect. [Documenting Errors]
+• Use exception objects whenever failure data needs to be conveyed to a handler.
+[OO Exceptions]
+
+• Overload only the isomorphic operators of algebraic classes. [Operator Over
+loading]
+• Always consider overloading the boolean, numeric, and string coercions of
+objects. [Coercions]
+Chapter 16, Class Hierarchies
+• Don’t manipulate the list of base classes directly. [Inheritance]
+• Use distributed encapsulated objects. [Objects]
+• Never use the one-argument form of bless. [Blessing Objects]
+• Pass constructor arguments as labeled values, using a hash reference. [Construc
+tor Arguments]
+• Distinguish arguments for base classes by class name as well. [Base Class Ini
+tialization]
+• Separate your construction, initialization, and destruction processes. [Construc
+tion and Destruction]
+• Build the standard class infrastructure automatically. [Automating Class Hier
+archies]
+• Use Class::Std to automate the deallocation of attribute data. [Attribute Dem
+olition]
+• Have attributes initialized and verified automatically. [Attribute Building]
+• Specify coercions as :STRINGIFY, :NUMERIFY, and :BOOLIFY methods. [Coercions]
+• Use :CUMULATIVE methods instead of SUPER:: calls. [Cumulative Methods]
+• Don’t use AUTOLOAD( ). [Autoloading]
+Chapter 17, Modules
+• Design the module’s interface first. [Interfaces]
+• Place original code inline. Place duplicated code in a subroutine. Place dupli
+cated subroutines in a module. [Refactoring]
+• Use three-part version numbers. [Version Numbers]
+• Enforce your version requirements programmatically. [Version Requirements]
+• Export judiciously and, where possible, only by request. [Exporting]
+• Consider exporting declaratively. [Declarative Exporting]
+• Never make variables part of a module’s interface. [Interface Variables]
+• Build new module frameworks automatically. [Creating Modules]
+• Use core modules wherever possible. [The Standard Library]
+• Use CPAN modules where feasible. [CPAN]
+
+
+Chapter 18, Testing and Debugging
+• Write the test cases first. [Test Cases]
+• Standardize your tests with Test::Simple or Test::More. [Modular Testing]
+• Standardize your test suites with Test::Harness. [Test Suites]
+• Write test cases that fail. [Failure]
+• Test both the likely and the unlikely. [What to Test]
+• Add new test cases before you start debugging. [Debugging and Testing]
+• Always use strict. [Strictures]
+• Always turn on warnings explicitly. [Warnings]
+• Never assume that a warning-free compilation implies correctness. [Correctness]
+• Turn off strictures or warnings explicitly, selectively, and in the smallest possi
+ble scope. [Overriding Strictures]
+• Learn at least a subset of the perl debugger. [The Debugger]
+• Use serialized warnings when debugging “manually”. [Manual Debugging]
+• Consider using “smart comments” when debugging, rather than warn state
+ments. [Semi-Automatic Debugging]
+Chapter 19, Miscellanea
+• Use a revision control system. [Revision Control]
+• Integrate non-Perl code into your applications via the Inline:: modules. [Other
+Languages]
+• Keep your configuration language uncomplicated. [Configuration Files]
+• Don’t use formats. [Formats]
+• Don’t tie variables or filehandles. [Ties]
+• Don’t be clever. [Cleverness]
+• If you must rely on cleverness, encapsulate it. [Encapsulated Cleverness]
+• Don’t optimize code—benchmark it. [Benchmarking]
+• Don’t optimize data structures—measure them. [Memory]
+• Look for opportunities to use caches. [Caching]
+• Automate your subroutine caching. [Memoization]
+• Benchmark any caching strategy you use. [Caching for Optimization]
+• Don’t optimize applications—profile them. [Profiling]
+• Be careful to preserve semantics when refactoring syntax. [Enbugging]

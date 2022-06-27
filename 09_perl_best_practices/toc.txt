@@ -1,0 +1,335 @@
+Table of contents
+Perl Best Practices
+Dedication
+SPECIAL OFFER: Upgrade this ebook with O’Reilly
+A Note Regarding Supplemental Files
+Preface
+Contents of This Book
+Conventions Used in This Book
+Code Examples
+Feedback
+Acknowledgments
+1. Best Practices
+Three Goals
+Robustness
+Efficiency
+Maintainability
+This Book
+Rehabiting
+2. Code Layout
+Bracketing
+Keywords
+Subroutines and Variables
+Builtins
+Keys and Indices
+Operators
+Semicolons
+Commas
+Line Lengths
+Indentation
+Tabs
+Blocks
+Chunking
+Elses
+Vertical Alignment
+Breaking Long Lines
+Non-Terminal Expressions
+Breaking by Precedence
+Assignments
+Ternaries
+Lists
+Automated Layout
+3. Naming Conventions
+Identifiers
+Booleans
+Reference Variables
+Arrays and Hashes
+Underscores
+Capitalization
+Abbreviations
+Ambiguous Abbreviations
+Ambiguous Names
+Utility Subroutines
+4. Values and Expressions
+String Delimiters
+Empty Strings
+Single-Character Strings
+Escaped Characters
+Constants
+Leading Zeros
+Long Numbers
+Multiline Strings
+Here Documents
+Heredoc Indentation
+Heredoc Terminators
+Heredoc Quoters
+Barewords
+Fat Commas
+Thin Commas
+Low-Precedence Operators
+Lists
+List Membership
+5. Variables
+Lexical Variables
+Package Variables
+Localization
+Initialization
+Punctuation Variables
+Localizing Punctuation Variables
+Match Variables
+Dollar-Underscore
+Array Indices
+Slicing
+Slice Layout
+Slice Factoring
+6. Control Structures
+If Blocks
+Postfix Selectors
+Other Postfix Modifiers
+Negative Control Statements
+C-Style Loops
+Unnecessary Subscripting
+Necessary Subscripting
+Iterator Variables
+Non-Lexical Loop Iterators
+List Generation
+List Selections
+List Transformation
+Complex Mappings
+List Processing Side Effects
+Multipart Selections
+Value Switches
+Tabular Ternaries
+do-while Loops
+Linear Coding
+Distributed Control
+Redoing
+Loop Labels
+7. Documentation
+Types of Documentation
+Boilerplates
+Extended Boilerplates
+Location
+Contiguity
+Position
+Technical Documentation
+Comments
+Algorithmic Documentation
+Elucidating Documentation
+Defensive Documentation
+Indicative Documentation
+Discursive Documentation
+Proofreading
+8. Built-in Functions
+Sorting
+Reversing Lists
+Reversing Scalars
+Fixed-Width Data
+Separated Data
+Variable-Width Data
+String Evaluations
+Automating Sorts
+Substrings
+Hash Values
+Globbing
+Sleeping
+Mapping and Grepping
+Utilities
+9. Subroutines
+Call Syntax
+Homonyms
+Argument Lists
+Named Arguments
+Missing Arguments
+Default Argument Values
+Scalar Return Values
+Contextual Return Values
+Multi-Contextual Return Values
+Prototypes
+Implicit Returns
+Returning Failure
+10. I/O
+Filehandles
+Indirect Filehandles
+Localizing Filehandles
+Opening Cleanly
+Error Checking
+Cleanup
+Input Loops
+Line-Based Input
+Simple Slurping
+Power Slurping
+Standard Input
+Printing to Filehandles
+Simple Prompting
+Interactivity
+Power Prompting
+Progress Indicators
+Automatic Progress Indicators
+Autoflushing
+11. References
+Dereferencing
+Braced References
+Symbolic References
+Cyclic References
+12. Regular Expressions
+Extended Formatting
+Line Boundaries
+String Boundaries
+End of String
+Matching Anything
+Lazy Flags
+Brace Delimiters
+Other Delimiters
+Metacharacters
+Named Characters
+Properties
+Whitespace
+Unconstrained Repetitions
+Capturing Parentheses
+Captured Values
+Capture Variables
+Piecewise Matching
+Tabular Regexes
+Constructing Regexes
+Canned Regexes
+Alternations
+Factoring Alternations
+Backtracking
+String Comparisons
+13. Error Handling
+Exceptions
+Builtin Failures
+Contextual Failure
+Systemic Failure
+Recoverable Failure
+Reporting Failure
+Error Messages
+Documenting Errors
+OO Exceptions
+Volatile Error Messages
+Exception Hierarchies
+Processing Exceptions
+Exception Classes
+Unpacking Exceptions
+14. Command-Line Processing
+Command-Line Structure
+Command-Line Conventions
+Meta-options
+In-situ Arguments
+Command-Line Processing
+Interface Consistency
+Interapplication Consistency
+15. Objects
+Using OO
+Criteria
+Pseudohashes
+Restricted Hashes
+Encapsulation
+Constructors
+Cloning
+Destructors
+Methods
+Accessors
+Lvalue Accessors
+Indirect Objects
+Class Interfaces
+Operator Overloading
+Coercions
+16. Class Hierarchies
+Inheritance
+Objects
+Blessing Objects
+Constructor Arguments
+Base Class Initialization
+Construction and Destruction
+Automating Class Hierarchies
+Attribute Demolition
+Attribute Building
+Coercions
+Cumulative Methods
+Autoloading
+17. Modules
+Interfaces
+Refactoring
+Version Numbers
+Version Requirements
+Exporting
+Declarative Exporting
+Interface Variables
+Creating Modules
+The Standard Library
+CPAN
+18. Testing and Debugging
+Test Cases
+Modular Testing
+Test Suites
+Failure
+What to Test
+Debugging and Testing
+Strictures
+Warnings
+Correctness
+Overriding Strictures
+The Debugger
+Manual Debugging
+Semi-Automatic Debugging
+19. Miscellanea
+Revision Control
+Other Languages
+Configuration Files
+Formats
+Ties
+Cleverness
+Encapsulated Cleverness
+Benchmarking
+Memory
+Caching
+Memoization
+Caching for Optimization
+Profiling
+Enbugging
+A. Essential Perl Best Practices
+B. Perl Best Practices
+Chapter 2, Code Layout
+Chapter 3, Naming Conventions
+Chapter 4, Values and Expressions
+Chapter 5, Variables
+Chapter 6, Control Structures
+Chapter 7, Documentation
+Chapter 8, Built-in Functions
+Chapter 9, Subroutines
+Chapter 10, I/O
+Chapter 11, References
+Chapter 12, Regular Expressions
+Chapter 13, Error Handling
+Chapter 14, Command-Line Processing
+Chapter 15, Objects
+Chapter 16, Class Hierarchies
+Chapter 17, Modules
+Chapter 18, Testing and Debugging
+Chapter 19, Miscellanea
+C. Editor Configurations
+vim
+vile
+Emacs
+BBEdit
+TextWrangler
+D. Recommended Modules and Utilities
+Recommended Core Modules
+Recommended CPAN Modules
+Utility Subroutines
+E. Bibliography
+Perl Coding and Development Practices
+Testing and Debugging
+Algorithms and Efficiency
+Coding Style and Common Mistakes
+General Coding and Development Practices
+Coding Standards
+Development Practices
+Text Editors
+Index
+About the Author
+Colophon
+SPECIAL OFFER: Upgrade this ebook with O’Reilly
+Copyright

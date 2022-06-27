@@ -1,0 +1,118 @@
+#!/usr/bin/perl -w
+# @author             :  Copyright (C) Church.ZHONG
+
+use strict;
+use warnings;
+use utf8;
+use Time::HiRes qw( time );
+use File::Spec;
+my $sep = '/';
+
+sub ltrim { my $s = shift; $s =~ s/^\s+//;       return $s }
+sub rtrim { my $s = shift; $s =~ s/\s+$//;       return $s }
+sub trim  { my $s = shift; $s =~ s/^\s+|\s+$//g; return $s }
+
+sub open_filehandle_for_write {
+  my $filename = $_[0];
+  local *FH;
+  use open ':encoding(UTF-8)';
+  open( FH, '>', $filename ) || die "Could not open $filename";
+  binmode FH, ":encoding(UTF-8)";
+  return *FH;
+}
+
+sub open_filehandle_for_read {
+  my $filename = $_[0];
+  local *FH;
+  open( FH, $filename ) || die "Could not open $filename";
+  return *FH;
+}
+
+sub get_abs_path {
+  # best code, get file true path.
+  my $path_curf = File::Spec->rel2abs(__FILE__);
+  # print ("# file in PATH = $path_curf\n");
+  my ( $vol, $dirs, $file ) = File::Spec->splitpath($path_curf);
+  # print ("# file in Dir = $dirs\n");
+  return $dirs;
+}
+
+sub output {
+  print "[";
+  foreach my $e (@_) { print "$e,"; }
+  print "]\n";
+}
+
+sub outputHash {
+  my $hRef = shift;
+  print "{";
+  foreach my $k ( keys %{$hRef} ) { print "$k => ${$hRef}{$k},"; }
+  print "}\n";
+}
+
+sub example {
+  my %stooges1 = ( 'Moe', 'Howard', 'Larry', 'Fine', 'Curly', 'Howard', 'Iggy', 'Pop', );
+  my %stooges2 = (
+    Moe   => 'Howard',
+    Larry => 'Fine',
+    Curly => 'Howard',
+    Iggy  => 'Pop',
+  );
+  outputHash( \%stooges1 );
+  outputHash( \%stooges2 );
+
+  my @hash_as_an_array = %stooges1;
+  output(@hash_as_an_array);
+
+  $stooges1{'key'} = 'value';
+  outputHash( \%stooges1 );
+
+  delete $stooges1{'key'};
+  outputHash( \%stooges1 );
+
+  my @stooge1_first_names = keys %stooges1;
+  my @stooge1_last_names  = values %stooges1;
+  output(@stooge1_first_names);
+  output(@stooge1_last_names);
+
+  # my %new_hash = (%hash1, %hash2);
+
+  # defined  exists
+  my %h;
+  $h{'foo'} = undef;
+  defined $h{'foo'} ? print 1 : print 0;
+  # $h{'foo'} is not defined, so it prints 0
+  exists $h{'foo'} ? print 1 : print 0;
+  # but it has been initialized nonetheless, and so this line prints 1
+
+  if ( $h{'foo'} ) {
+    print 'true', "\n";
+  } else {
+    print 'false', "\n";
+  }
+  # prints 'false'; since $h{'foo'} is not defined, it cannot be true
+
+}
+
+# -------------------------------- main --------------------------------
+sub main() {
+  # my $startTime = Time::HiRes::gettimeofday();
+  # my $beginT    = time();
+  example();
+  my $elapsed_time = time() - $^T;
+  # $^T just like $start_time=time() put it very beginning of perl script.
+  print "\n# run time is: $elapsed_time second(s) \n";
+
+  # my $endT = time();
+  # printf( "%.4f\n", $endT - $beginT );
+  # my $stopTime = Time::HiRes::gettimeofday();
+  # printf( "%.4f\n", $stopTime - $startTime );
+}
+# -------------------------------- exit --------------------------------
+main();
+exit 0;
+# sudo apt install -y perltidy
+# http://perltidy.sourceforge.net/tutorial.html
+# chapter07:hashes
+# Sun 12 Jun 2022 12:38:31 PM HKT
+# f="/data/2022/perl/01_things_perl101/church/example07.pl";perltidy -ce -l=128 -i=2 -nbbc -b ${f};

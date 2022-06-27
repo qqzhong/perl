@@ -1,0 +1,7 @@
+# find $(pwd) -type f -name "*.pl" | while read -r f; do perltidy -ce -l=128 -i=2 -nbbc "${f}"; mv -f "${f}.tdy" "${f}"; done
+# find $(pwd) -type f -name "*.pm" | while read -r f; do perltidy -ce -l=128 -i=2 -nbbc "${f}"; mv -f "${f}.tdy" "${f}"; done
+
+# sed -i s"/debug/church/g" `grep "debug" -rl ./`;
+# sed -i s"/outputArray/printArray/g" `grep "outputArray" -rl ./`;
+# sed -i s"/outputHash/printHash/g" `grep "outputHash" -rl ./`;
+
