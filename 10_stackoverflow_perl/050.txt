@@ -1,0 +1,504 @@
+# 6162484
+Set your PERL_UNICODE envariable to AS. This makes all Perl scripts decode @ARGV as UTF‑8 strings, and sets the encoding of all three of stdin, stdout, and stderr to UTF‑8. Both these are global effects, not lexical ones.
+
+At the top of your source file (program, module, library, dohickey), prominently assert that you are running perl version 5.12 or better via:
+
+use v5.12;  # minimal for unicode string feature
+use v5.14;  # optimal for unicode string feature
+Enable warnings, since the previous declaration only enables strictures and features, not warnings. I also suggest promoting Unicode warnings into exceptions, so use both these lines, not just one of them. Note however that under v5.14, the utf8 warning class comprises three other subwarnings which can all be separately enabled: nonchar, surrogate, and non_unicode. These you may wish to exert greater control over.
+
+use warnings;
+use warnings qw( FATAL utf8 );
+Declare that this source unit is encoded as UTF‑8. Although once upon a time this pragma did other things, it now serves this one singular purpose alone and no other:
+
+use utf8;
+Declare that anything that opens a filehandle within this lexical scope but not elsewhere is to assume that that stream is encoded in UTF‑8 unless you tell it otherwise. That way you do not affect other module’s or other program’s code.
+
+use open qw( :encoding(UTF-8) :std );
+Enable named characters via \N{CHARNAME}.
+
+use charnames qw( :full :short );
+If you have a DATA handle, you must explicitly set its encoding. If you want this to be UTF‑8, then say:
+
+binmode(DATA, ":encoding(UTF-8)");
+There is of course no end of other matters with which you may eventually find yourself concerned, but these will suffice to approximate the state goal to “make everything just work with UTF‑8”, albeit for a somewhat weakened sense of those terms.
+
+One other pragma, although it is not Unicode related, is:
+
+      use autodie;
+It is strongly recommended.
+
+
+use 5.014;
+use utf8;
+use strict;
+use autodie;
+use warnings; 
+use warnings    qw< FATAL  utf8     >;
+use open        qw< :std  :utf8     >;
+use charnames   qw< :full >;
+use feature     qw< unicode_strings >;
+
+use File::Basename      qw< basename >;
+use Carp                qw< carp croak confess cluck >;
+use Encode              qw< encode decode >;
+use Unicode::Normalize  qw< NFD NFC >;
+
+END { close STDOUT }
+
+if (grep /\P{ASCII}/ => @ARGV) { 
+   @ARGV = map { decode("UTF-8", $_) } @ARGV;
+}
+
+$0 = basename($0);  # shorter messages
+$| = 1;
+
+binmode(DATA, ":utf8");
+
+# give a full stack dump on any untrapped exceptions
+local $SIG{__DIE__} = sub {
+    confess "Uncaught exception: @_" unless $^S;
+};
+
+# now promote run-time warnings into stack-dumped
+#   exceptions *unless* we're in an try block, in
+#   which case just cluck the stack dump instead
+local $SIG{__WARN__} = sub {
+    if ($^S) { cluck   "Trapped warning: @_" } 
+    else     { confess "Deadly warning: @_"  }
+};
+
+while (<>)  {
+    chomp;
+    $_ = NFD($_);
+    ...
+} continue {
+    say NFC($_);
+}
+__END__
+
+
+# 11695110
+use strict;
+use warnings;
+Syntax error!
+exit 0;
+
+
+Perl has a syntax called "indirect method notation". It allows
+
+Foo->new($bar)
+to be written as
+
+new Foo $bar
+So that means
+
+Syntax error ! exit 0;
+is the same as
+
+error->Syntax(! exit 0);
+or
+
+error->Syntax(!exit(0));
+Not only is it valid syntax, it doesn't result in a run-time error because the first thing executed is exit(0).
+
+perl -MO=Deparse -w test.pl
+android@Church:/data$ perl -MO=Deparse -w test.pl
+BEGIN { $^W = 1; }
+use strict;
+use warnings;
+'error'->Syntax(!exit(0));
+test.pl syntax OK
+
+
+# 3469080
+Match whitespace but not newlines
+Use a double-negative:
+/[^\S\r\n]/
+
+#! /usr/bin/env perl
+use strict;
+use warnings;
+use 5.005;  # for qr//
+my $ws_not_crlf = qr/[^\S\r\n]/;
+
+for (' ', '\f', '\t', '\r', '\n') {
+  my $qq = qq["$_"];
+  printf "%-4s => %s\n", $qq,
+    (eval $qq) =~ $ws_not_crlf ? "match" : "no match";
+}
+
+
+# 303216
+You use last instead of break
+for my $entry (@array){
+    if ($string eq "text"){
+         last;
+    }
+}
+
+break
+Break out of a given block.
+break is available only if the "switch" feature is enabled or if it is prefixed with CORE::.
+The "switch" feature is enabled automatically with a use v5.10 (or higher) declaration in the current scope.
+
+# 73667
+You can use the perl debugger on a trivial program, like so:
+perl -de1
+
+
+# 8303488
+Regex to match any character including new lines
+
+any character
+[\S\s]
+
+Add the s modifier to your regex to cause . to match newlines:
+$string =~ /(START)(.+?)(END)/s;
+
+# 2860226
+How can I check if a Perl array contains a particular value?
+
+if ( grep( /^$value$/, @array ) ) {
+  print "found it";
+}
+
+Simply turn the array into a hash:
+my %params = map { $_ => 1 } @badparams;
+
+if(exists($params{$someparam})) { ... }
+You can also add more (unique) params to the list:
+$params{$newparam} = 1;
+And later get a list of (unique) params back:
+@badparams = keys %params;
+
+
+# 7406807
+Find size of an array in Perl
+my @arr = (2);
+print scalar @arr; # First way to print array size
+
+print $#arr; # Second way to print last index of array
+
+my $arrSize = @arr;
+print $arrSize; # Third way to print array size
+
+# 799968
+
+exec
+executes a command and never returns. It's like a return statement in a function.
+
+system
+executes a command and your Perl script is continued after the command has finished.
+The return value is the exit status of the command. 
+
+backticks
+like system executes a command and your perl script is continued after the command has finished.
+In contrary to system the return value is STDOUT of the command. qx// is equivalent to backticks.
+
+
+# 2702564
+awk '{ sum += $1 } END { print sum }' file
+% perl -nle '$sum += $_ } END { print $sum'
+If you're curious what Perl one-liners do, you can deparse them:
+ %  perl -MO=Deparse -nle '$sum += $_ } END { print $sum'
+
+
+# 845060
+
+How does our differ from my and what does our do?
+In Summary:
+
+Available since Perl 5, my is a way to declare non-package variables, that are:
+private
+new
+non-global
+separate from any package, so that the variable cannot be accessed in the form of $package_name::variable.
+
+On the other hand, our variables are package variables, and thus automatically:
+global variables
+definitely not private
+not necessarily new
+can be accessed outside the package (or lexical scope) with the qualified namespace, as $package_name::variable.
+
+
+# 22836
+How do I perform a Perl substitution on a string while keeping the original?
+
+This is the idiom I've always used to get a modified copy of a string without changing the original:
+(my $newstring = $oldstring) =~ s/foo/bar/g;
+
+In perl 5.14.0 or later, you can use the new /r non-destructive substitution modifier:
+my $newstring = $oldstring =~ s/foo/bar/gr; 
+
+NOTE:
+The above solutions work without g too. 
+
+
+
+# 1175390
+Use lt, gt, eq, ne, and cmp as appropriate for string comparisons:
+Binary eq returns true if the left argument is stringwise equal to the right argument.
+Binary ne returns true if the left argument is stringwise not equal to the right argument.
+Binary cmp returns -1, 0, or 1 depending on whether the left argument is stringwise less than, equal to, or greater than the right argument.
+Binary ~~ does a smartmatch between its arguments.
+
+# 178539
+
+    use POSIX;
+    $ceil   = ceil(3.5);                        # 4
+    $floor  = floor(3.5);                       # 3
+
+my $rounded = int($float + 0.5);
+UPDATE
+If it's possible for your $float to be negative, the following variation will produce the correct result:
+my $rounded = int($float + $float/abs($float*2 || 1));
+
+# 4787413
+Rename Files and Directories (Add Prefix)
+
+for f in * ; do mv -- "$f" "PRE_$f" ; done
+perl -e 'rename $_, "PRE_$_" for <*>'
+
+ls | xargs -I {} mv {} PRE_{}
+ls | xargs -I {} mv {} {}_SUF
+
+
+# 1162245
+use Data::Dumper;
+my %hash = ('abc' => 123, 'def' => [4,5,6]);
+print Dumper(\%hash);
+
+print "$_ $h{$_}\n" for (keys %h);
+Elegant, but actually 30% slower (!):
+while (my ($k,$v)=each %h){print "$k $v\n"}
+
+# 1654021
+delete a newline if it is the last character in a file?
+perl -pe 'chomp if eof' filename >filename2
+or, to edit the file in place:
+perl -pi -e 'chomp if eof' filename
+
+# 84932
+
+use File::Basename;
+my $dirname = dirname(__FILE__);
+
+use Cwd 'abs_path';
+print abs_path($0);
+
+use File::Spec;
+File::Spec->rel2abs( __FILE__ );
+
+# 7651
+remove duplicate items from an array in Perl?
+
+sub uniq {
+    my %seen;
+    grep !$seen{$_}++, @_;
+}
+my @array = qw(one two three two three);
+my @filtered = uniq(@array);
+print "@filtered\n";
+
+% perldoc -q duplicate
+my %hash   = map { $_, 1 } @array;
+# or a hash slice: @hash{ @array } = ();
+# or a foreach: $hash{$_} = 1 foreach ( @array );
+my @unique = keys %hash;
+
+use List::MoreUtils qw(uniq);
+my @unique = uniq( 1, 2, 3, 4, 4, 5, 6, 5, 7 ); # 1,2,3,4,5,6,7
+my $unique = uniq( 1, 2, 3, 4, 4, 5, 6, 5, 7 ); # 7
+
+my @unique = ();
+my %seen   = ();
+foreach my $elem ( @array )
+{
+ next if $seen{ $elem }++;
+ push @unique, $elem;
+}
+
+my %seen = ();
+my @unique = grep { ! $seen{ $_ }++ } @array;
+
+
+# 885908
+In perl, they result in the same opcodes:
+$ perl -MO=Concise -e 'for(;;) { print "foo\n" }'
+a  <@> leave[1 ref] vKP/REFC ->(end)
+1     <0> enter ->2
+2     <;> nextstate(main 2 -e:1) v ->3
+9     <2> leaveloop vK/2 ->a
+3        <{> enterloop(next->8 last->9 redo->4) v ->4
+-        <@> lineseq vK ->9
+4           <;> nextstate(main 1 -e:1) v ->5
+7           <@> print vK ->8
+5              <0> pushmark s ->6
+6              <$> const[PV "foo\n"] s ->7
+8           <0> unstack v ->4
+-e syntax OK
+
+$ perl -MO=Concise -e 'while(1) { print "foo\n" }'
+a  <@> leave[1 ref] vKP/REFC ->(end)
+1     <0> enter ->2
+2     <;> nextstate(main 2 -e:1) v ->3
+9     <2> leaveloop vK/2 ->a
+3        <{> enterloop(next->8 last->9 redo->4) v ->4
+-        <@> lineseq vK ->9
+4           <;> nextstate(main 1 -e:1) v ->5
+7           <@> print vK ->8
+5              <0> pushmark s ->6
+6              <$> const[PV "foo\n"] s ->7
+8           <0> unstack v ->4
+-e syntax OK
+
+
+# 392135
+What exactly does Perl's "bless" do?
+In general, bless associates an object with a class.
+package MyClass;
+my $object = { };
+bless $object, "MyClass";
+Now when you invoke a method on $object, Perl know which package to search for the method.
+
+If the second argument is omitted, as in your example, the current package/class is used.
+
+For the sake of clarity, your example might be written as follows:
+
+sub new { 
+  my $class = shift; 
+  my $self = { }; 
+  bless $self, $class; 
+} 
+
+
+
+# 3727795
+An alternative method to using upgrade from the default CPAN shell is to use cpanminus and cpan-outdated.
+
+These are so easy and nimble to use that I hardly ever go back to CPAN shell. To upgrade all of your modules in one go, the command is:
+cpan-outdated -p | cpanm
+
+I recommend you install cpanminus like the docs describe:
+curl -L https://cpanmin.us | perl - App::cpanminus
+
+And then install cpan-outdated along with all other CPAN modules using cpanm:
+cpanm App::cpanoutdated
+
+BTW: If you are using perlbrew then you will need to repeat this for every Perl you have installed under it.
+
+You can find out more about cpanminus and cpan-outdated at the Github repos here:
+https://github.com/miyagawa/cpanminus
+https://github.com/tokuhirom/cpan-outdated
+
+
+# 6125098
+You can use a character class:
+/[^\s\\]/
+matches anything that is not a whitespace character nor a \. Here's another example:
+
+
+# 3828205
+multi-line comment in Perl?
+=pod
+x
+y
+z
+=cut
+
+
+=begin comment
+x
+y
+z
+=end comment
+=cut
+
+
+# 7283274
+Check whether a string contains a substring
+if (index($str, $substr) != -1) {
+    print "$str contains $substr\n";
+} 
+
+# 953707
+In Perl, how can I read an entire file into a string?
+my $file = "index.html";
+my $document = do {
+    local $/ = undef;
+    open my $fh, "<", $file
+        or die "could not open $file: $!";
+    <$fh>;
+};
+
+
+# 627661
+output UTF-8 from Perl?
+binmode(STDOUT, ":utf8");          #treat as if it is UTF-8
+binmode(STDIN, ":encoding(utf8)"); #actually check if it is UTF-8
+
+
+# 16658333
+perl -ne 'print if /regex/' files
+
+
+# 297034
+Prototypes allow you to define functions that behave like built-in functions.
+
+# 3033
+The rule of thumb is to use the function most suited to your needs.
+
+If you just want the keys and do not plan to ever read any of the values, use keys():
+foreach my $key (keys %hash) { ... }
+
+If you just want the values, use values():
+foreach my $val (values %hash) { ... }
+
+If you need the keys and the values, use each():
+keys %hash; # reset the internal iterator so a prior each() doesn't affect the loop
+while(my($k, $v) = each %hash) { ... }
+
+
+# 5080988
+perl -ne 'print "$1\n" if /name="(.*?)"/' filename
+grep -Po 'name="\K.*?(?=")' filename
+:v/.*name="\v([^"]+).*/d|%s//\1;  # Vim
+grep -o 'name="[^"]*"' filename
+
+
+# 2045644
+For string comparisons in Perl, use eq or ne:
+if ($str eq "")
+{
+  // ...
+}
+
+# 10487316
+Best way to iterate through a Perl array
+Which is the best implementation(in terms of speed and memory usage) for iterating through a Perl array? Is there any better way? (@Array need not be retained).
+
+Implementation 1
+foreach (@Array)
+{
+      SubRoutine($_);
+}
+Implementation 2
+while($Element=shift(@Array))
+{
+      SubRoutine($Element);
+}
+Implementation 3
+while(scalar(@Array) !=0)
+{
+      $Element=shift(@Array);
+      SubRoutine($Element);
+}
+Implementation 4
+for my $i (0 .. $#Array)
+{
+      SubRoutine($Array[$i]);
+}
+Implementation 5
+map { SubRoutine($_) } @Array ;
+

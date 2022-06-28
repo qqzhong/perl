@@ -1,0 +1,231 @@
+# 1036285
+The $number variables contain the parts of the string that matched the capture groups () in the pattern for your last regex match if the match was successful.
+
+# 296964
+shift() is a built in Perl subroutine that takes an array as an argument, then returns and deletes the first item in that array. 
+
+# 229009
+How can I get a call stack listing in Perl?
+You can use Devel::StackTrace.
+use Devel::StackTrace;
+my $trace = Devel::StackTrace->new;
+print $trace->as_string; # like carp
+
+# 129607
+The short answer is that my marks a variable as private in a lexical scope, and local marks a variable as private in a dynamic scope.
+sub foo { print "$x\n"; }
+sub bar { local $x; $x = 2; foo(); }
+
+$x = 1;
+foo(); # prints '1'
+bar(); # prints '2' because $x was localed in bar
+foo(); # prints '1' again because local from foo is no longer in effect
+
+# 6994947
+How to replace a string in an existing file in Perl
+Use a one-liner:
+$ perl -pi.bak -e 's/blue/red/g' *_classification.dat
+
+Explanation
+-p processes, then prints <> line by line
+-i activates in-place editing. Files are backed up using the .bak extension
+The regex substitution acts on the implicit variable, which are the contents of the file, line-by-line
+
+
+# 1039107
+You can check for a module's installation path by:
+perldoc -l XML::Simple
+
+# 1023710
+Start by installing perl http://strawberryperl.com/
+Install App::Ack by typing (in a windows command shell)
+C:\>cpan App::Ack
+And undoubtedly this will prove useful http://learn.perl.org/
+
+# 2304577
+If you're doing a global match (/g) then the regex in list context will return all of the captured matches. Simply do:
+my @matches = ( $str =~ /pa(tt)ern/g )
+
+This command for example:
+perl -le '@m = ( "foo12gfd2bgbg654" =~ /(\d+)/g ); print for @m'
+
+# 4505381
+Here's how to do it:
+use strict;
+use warnings;
+my $file = 'SnPmaster.txt';
+open my $info, $file or die "Could not open $file: $!";
+while( my $line = <$info>)  {   
+    print $line;    
+    last if $. == 2;
+}
+close $info;
+
+# 6534573
+Here's a quick summary:
+defined $hash{key} tells you whether or not the value for the given key is defined (i.e. not undef). Use it to distinguish between undefined values and values that are false in a boolean context such as 0 and ''.
+exists $hash{key} tells you whether or not %hash contains the given key. Use it to distinguish between undefined values and non-existent ones.
+This is easiest to see with an example. Given this hash:
+my %hash = (a => 1, b => 0, c => undef);
+
+Here are the results for retrieval, defined-ness, and existence:
+# key  value  defined  exists
+a          1        1       1
+b          0        1       1
+c      undef        0       1
+d      undef        0       0
+
+# 502644
+I'd add my vote to picking up Test::More before going any further in Perl testing.
+The Perl testing community is fairly well united around the Test Anything Protocol, 
+and you'll want to play around with Test::More to understand how it works and how tools like prove and Test::Harness::Archive can help automate and distribute testing.
+If you want to just "jump right in", I think Test::Class provides xTest facilities with a TAP backend.
+I haven't used it at all (I'm a Test::More person myself), but it's very highly rated.
+
+# 1915616
+How can I elegantly call a Perl subroutine whose name is held in a variable?
+Rather than storing subroutine names in a variable and calling them, a better way to do this is to use a hash of subroutine references (otherwise known as a dispatch table.)
+
+my %actions = ( foo => \&foo,
+                bar => \&bar,
+                baz => sub { print 'baz!' } 
+              );
+Then you can call the right one easily:
+$actions{$action}->();
+You can also add some checking to make sure $action is a valid key in the hash, and so forth.
+In general, you should avoid symbolic references (what you're doing now) as they cause all kinds of problems. In addition, using real subroutine references will work with strict turned on.
+
+# 185114
+use takes place at compile-time, so this would work:
+BEGIN {push @INC, '..'}
+use EPMS;
+
+But the better solution is to use lib, which is a nicer way of writing the above:
+use lib '..';
+use EPMS;
+
+In case you are running from a different directory, though, the use of FindBin is recommended:
+use FindBin;                     # locate this script
+use lib "$FindBin::RealBin/..";  # use the parent directory
+use EPMS;
+
+# 1045792
+opendir my $dir, "/some/path" or die "Cannot open directory: $!";
+my @files = readdir $dir;
+closedir $dir;
+
+You can also use:
+my @files = glob( $dir . '/*' );
+
+
+my $d = shift;
+opendir(D, "$d") || die "Can't open directory $d: $!\n";
+my @list = readdir(D);
+closedir(D);
+foreach my $f (@list) {
+    print "\$f = $f\n";
+}
+
+# 644714
+Grouping and references are your friends:
+(.)\1+
+
+Will match 2 or more occurences of the same character. For word constituent characters only, use \w instead of ., i.e.:
+(\w)\1+
+
+foreach (qw(aaa bbb abc)) {
+  say;
+  say ' original' if /(\w)\1+/;
+  say ' new way'  if /(\w)\g{1}+/;
+  say ' relative' if /(\w)\g{-1}+/;
+  say ' named'    if /(?'char'\w)\g{char}+/;
+  say ' named'    if /(?<char>\w)\k<char>+/;
+}
+
+# 135755
+$ perl -MSome::Module -le 'print $Some::Module::VERSION'
+$ cpan -D Text::CSV_XS
+$ cpan -O
+
+# 4616395
+How can I use a variable for a regex pattern without interpreting meta characters?
+Use \Q to autoescape any potentially problematic characters in your variable.
+if($text_to_search =~ m/\Q$search_string/) print "wee";
+
+Use the quotemeta function:
+$text_to_search = "example text with [foo] and more";
+$search_string = quotemeta "[foo]";
+print "wee" if ($text_to_search =~ /$search_string/);
+
+You can use quotemeta (\Q \E) if your Perl is version 5.16 or later, but if below you can simply avoid using a regular expression at all.
+For example, by using the index command:
+if (index($text_to_search, $search_string) > -1) {
+    print "wee";
+}
+
+# 9444915
+how to check if a hash is empty in perl
+if (%hash){}
+
+
+# 890686
+For maximum safety, I'd suggest using [0-9] any time you don't specifically intend to match all unicode-defined digits.
+According to perlreref, '\d' is locale-aware and Unicode aware.
+
+# 26178038
+$ mkdir 1
+$ cd 1
+$ for i in {1..1000}; do dd if=/dev/urandom of=$i.xml bs=1K count=10; done
+$ cd ..
+$ cp -r 1 2
+$ sync; sudo sh -c 'echo 3 > /proc/sys/vm/drop_caches'
+$ time strace -f -c -o trace.copy2c cp -r 2 2copy
+$ sync; sudo sh -c 'echo 3 > /proc/sys/vm/drop_caches'
+$ time strace -f -c -o trace.copy1c cp -r 1 1copy
+
+
+# 7617852
+         Fatal  Backtrace
+carp       N        N
+cluck      N        Y
+croak      Y        N
+confess    Y        Y
+
+
+# 1557959
+where a Perl module is installed?
+perl -MTime::HiRes -e 'print $INC{"Time/HiRes.pm"}' or perldoc -l Time::HiRes
+
+# 334686
+print "$^O\n";
+
+use English qw' -no_match_vars ';
+print "$OSNAME\n";
+
+use Config;
+print "$Config{osname}\n";
+print "$Config{archname}\n";
+
+# 473666
+In my opinion, the Readonly approach you used is solid.
+There's also the more traditional constant pragma.
+use constant {
+    HOME   => 'Home',
+    WORK   => 'Work',
+    MOBILE => 'Mobile',
+};
+$phone_number->{type} = HOME;
+
+
+# 766397
+The easiest way is to use Proc::Daemon.
+#!/usr/bin/perl
+use strict;
+use warnings;
+use Proc::Daemon;
+Proc::Daemon::Init;
+my $continue = 1;
+$SIG{TERM} = sub { $continue = 0 };
+while ($continue) {
+     #do stuff
+}

@@ -1,0 +1,189 @@
+# 341484
+%INC contains the full path a module was loaded from.
+Example:
+$ perl -M'Data::Dump qw(pp)' -e 'pp(\%INC)'
+{
+  "Data/Dump.pm"         => "/usr/share/perl5/Data/Dump.pm",
+  "Exporter.pm"          => "/usr/share/perl/5.10/Exporter.pm",
+  "List/Util.pm"         => "/usr/lib/perl/5.10/List/Util.pm",
+  "Scalar/Util.pm"       => "/usr/lib/perl/5.10/Scalar/Util.pm",
+  "XSLoader.pm"          => "/usr/lib/perl/5.10/XSLoader.pm",
+  "overload.pm"          => "/usr/share/perl/5.10/overload.pm",
+  "strict.pm"            => "/usr/share/perl/5.10/strict.pm",
+  "vars.pm"              => "/usr/share/perl/5.10/vars.pm",
+  "warnings.pm"          => "/usr/share/perl/5.10/warnings.pm",
+  "warnings/register.pm" => "/usr/share/perl/5.10/warnings/register.pm",
+}
+
+# 519309
+Try to use the pragma open instead:
+use strict;
+use warnings;
+use open qw(:std :utf8);
+
+while(<>){
+    my @chars = split //, $_;
+    print "$_" foreach(@chars);
+}
+
+# 7580129
+Perl iterate through each match
+From the perlretut (a very fine tutorial)
+while ($x =~ /(\w+)/g) {
+  print "Word is $1, ends at position ", pos $x, "\n";
+}
+You can use while together with the g modifier to iterate over all matches, with $1 you get the content of your capturing group 1, and in this example from the tutorial you get also the position with pos.
+
+# 122277
+r = re.compile(r'(?P<cmd>foo|bar|baz)(?P<data>.+)')
+def do_foo(data):
+def do_bar(data):
+def do_baz(data):
+dispatch = {
+    'foo': do_foo,
+    'bar': do_bar,
+    'baz': do_baz,
+}
+m = r.match(var)
+if m:
+    dispatch[m.group('cmd')](m.group('data'))
+
+# 2329385
+How can I unbless an object in Perl?
+#!/usr/bin/perl
+use strict; use warnings;
+use Scalar::Util qw( refaddr );
+use Data::Structure::Util qw( unbless );
+my $x = bless { a => 1, b => 2 } => 'My';
+printf "%s : %s\n", ref $x, refaddr $x;
+unbless $x;
+printf "%s : %s\n", ref $x, refaddr $x;
+
+
+# 2925604
+if you want to find all matches, use the built-in grep:
+my @matches = grep { /pattern/ } @list_of_strings;
+
+if you want to find the first match, use first in List::Util:
+use List::Util 'first';  
+my $match = first { /pattern/ } @list_of_strings;
+
+if you want to find the count of all matches, use true in List::MoreUtils:
+use List::MoreUtils 'true';
+my $count = true { /pattern/ } @list_of_strings;
+
+if you want to know the index of the first match, use first_index in List::MoreUtils:
+use List::MoreUtils 'first_index'; 
+my $index = first_index { /pattern/ } @list_of_strings;
+
+if you want to simply know if there was a match, but you don't care which element it was or its value, use any in List::Util:
+use List::Util 1.33 'any';
+my $match_found = any { /pattern/ } @list_of_strings;
+
+# 3490032
+if today is a weekend in bash?
+You can use something like:
+if [[ $(date +%u) -gt 5 ]]; then echo weekend; fi
+# weekday
+$(date +%u) -lt 6
+
+
+# 3652527
+my($variable) = "some string" =~ /(e\s*str)/;
+This works because
+If the /g option is not used, m// in list context returns a list consisting of the subexpressions matched by the parentheses in the pattern, i.e., ($1, $2, $3 …).
+
+# 2872089
+I know that bash -x script.sh will execute script printing each line before actual execution. How to make Perl and Python interpreters do the same?
+For clarification: perl -d:Trace program.pl and python -m trace -t program.py respectively.
+
+# 4371714
+profile my Perl programs?
+$ perl -d:DProf program.pl
+$ dprofpp -p program.pl
+$ perl -d:NYTProf some_perl.pl
+
+# 17131249
+Remove ^M control chars with
+perl -i -pe 'y|\r||d' script.pl
+
+in vi type:
+:set ff=unix
+:x
+
+# 23748548
+Perl::Critic - Critique Perl source code for best-practices.
+
+# 2647273
+How can I check if an object has a specific method?
+You can use the UNIVERSAL::can method of all objects to determine what methods it supports:
+
+if ($myObject->can($methodName)) {
+    $myObject->$methodName;
+}
+
+# 12752045
+Perl how to check if array is still empty?
+You will see all of these idioms used to test whether an array is empty.
+if (!@match)
+if (@match == 0)
+if (scalar @match == 0)
+In scalar context, an array is evaluated as the number of elements it contains.
+
+# 550258
+ The simplest way to make sure a regex is compiled only once is to use use a regex object.
+sub CheckLogfileForToday()
+{
+  my $today = (qw<Sun Mon Tue Wed Thu Fri Sat>)[(localtime)[6]];
+  my $today_regex = qr/^$today:/i; # compiles once per function call
+  while (<LOGFILE>) {
+    if ($_ =~ $today_regex) {
+    }
+  }
+}
+
+
+# 388187
+best way to make a deep copy of a data structure in Perl?
+Clone is much faster than Storable::dclone, but the latter supports more data types.
+Clone::Fast and Clone::More are pretty much equivalent if memory serves me right, but less feature complete than even Clone, and Scalar::Util::Clone supports even less but IIRC is the fastest of them all for some structures.
+
+# 5210523
+Some of the code above is extremely puzzling. I've just rewritten it with annotations for you.
+#!/usr/bin/perl
+use LWP::Simple;                # From CPAN
+use JSON qw( decode_json );     # From CPAN
+use Data::Dumper;               # Perl core module
+use strict;                     # Good practice
+use warnings;                   # Good practice
+
+my $trendsurl = "https://graph.facebook.com/?ids=http://www.filestube.com";
+
+# open is for files.  unless you have a file called
+# 'https://graph.facebook.com/?ids=http://www.filestube.com' in your
+# local filesystem, this won't work.
+#{
+#  local $/; #enable slurp
+#  open my $fh, "<", $trendsurl;
+#  $json = <$fh>;
+#}
+
+# 'get' is exported by LWP::Simple; install LWP from CPAN unless you have it.
+# You need it or something similar (HTTP::Tiny, maybe?) to get web pages.
+my $json = get( $trendsurl );
+die "Could not get $trendsurl!" unless defined $json;
+
+# This next line isn't Perl.  don't know what you're going for.
+#my $decoded_json = @{decode_json{shares}};
+
+# Decode the entire JSON
+my $decoded_json = decode_json( $json );
+
+# you'll get this (it'll print out); comment this when done.
+print Dumper $decoded_json;
+
+# Access the shares like this:
+print "Shares: ",
+      $decoded_json->{'http://www.filestube.com'}{'shares'},
+      "\n";
+

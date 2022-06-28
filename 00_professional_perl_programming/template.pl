@@ -41,8 +41,8 @@ sub printArray {
   my $name = shift;
   print "${name}:[";
   foreach my $e (@_) {
-    print "$e,"    if defined $e;
-    print "undef," if !defined $e;
+    $e = 'undef' if !defined $e;
+    print "$e,";
   }
   print "]\n";
 }

@@ -1,0 +1,200 @@
+# 350018
+combine hashes in Perl?
+
+%hash1 = (%hash1, %hash2)
+
+## or else ...
+@hash1{keys %hash2} = values %hash2;
+
+## or with references ...
+$hash_ref1 = { %$hash_ref1, %$hash_ref2 };
+
+
+# 2899367
+Raku (Perl 6) has the say function that automatically appends \n.
+You can also use say in Perl 5.10 or 5.12 if you add
+use feature qw(say); # This feature is available starting with Perl 5.10.
+
+
+# 5741101
+# assuming @array is your array:
+print join(", ", @array);
+{local $,=', ';print @array}
+
+
+# 640001
+remove text within parentheses with a regex?
+Perl: $s =~ s/\([^()]*\)//g
+s/\([^)]*\)//
+So in Python, you'd do:
+re.sub(r'\([^)]*\)', '', filename)
+
+
+# 15758814
+Turning multiple lines into one comma separated line
+Using paste command:
+paste -d, -s file
+
+cat file | xargs | sed -e 's/ /,/g'
+awk -F'\n' '{if(NR == 1) {printf $0} else {printf ","$0}}' somefile
+
+
+# 6579876
+match a substring in a string, ignoring case
+if ($line=~/^Mandy Pande:/i)
+If you don't want to use str.lower(), you can use a regular expression:
+import re
+if re.search('mandy', 'Mandy Pande', re.IGNORECASE):
+    # Is True
+
+
+# 12018245
+Regular expression to validate username
+
+^(?=.{8,20}$)(?![_.])(?!.*[_.]{2})[a-zA-Z0-9._]+(?<![_.])$
+ └─────┬────┘└───┬──┘└─────┬─────┘└─────┬─────┘ └───┬───┘
+       │         │         │            │           no _ or . at the end
+       │         │         │            │
+       │         │         │            allowed characters
+       │         │         │
+       │         │         no __ or _. or ._ or .. inside
+       │         │
+       │         no _ or . at the beginning
+       │
+       username is 8-20 characters long
+
+# 288900
+convert a string to a number in Perl?
+perl -e 'print "5.45" + 0.1;'
+
+# 12647
+if a variable has a numeric value in Perl?
+#!/usr/bin/perl
+use warnings;
+use strict;
+use Scalar::Util qw(looks_like_number);
+my @exprs = qw(1 5.25 0.001 1.3e8 foo bar 1dd inf infinity);
+foreach my $expr (@exprs) {
+    print "$expr is", looks_like_number($expr) ? '' : ' not', " a number\n";
+}
+
+
+# 15210532
+perl -E 'say join ":", map { ord } split //, "鸡\n";'
+233:184:161:10
+
+$ perl -Mutf8 -E 'say join ":", map { ord } split //, "鸡\n";'
+40481:10
+
+$ perl -Mutf8 -e 'print "鸡\n";'
+Wide character in print at -e line 1.
+鸡
+$ perl -Mutf8 -CS -e 'print "鸡\n";'
+鸡
+
+
+# 1480066
+{
+no warnings 'uninitialized';
+if( length $name ) {
+}
+}
+
+
+# 4597937
+$string =~ s/^\s+|\s+$//g ;     # remove both leading and trailing whitespace
+
+
+# 38972736
+Print lines between PAT1 and PAT2
+$ awk '/PAT1/,/PAT2/' file
+awk '/PAT1/{flag=1} flag; /PAT2/{flag=0}' file
+
+Print lines between PAT1 and PAT2 - not including PAT1 and PAT2
+$ awk '/PAT1/{flag=1; next} /PAT2/{flag=0} flag' file
+awk '/PAT2/{flag=0} flag; /PAT1/{flag=1}' file.
+
+Print lines between PAT1 and PAT2 - including PAT1
+$ awk '/PAT1/{flag=1} /PAT2/{flag=0} flag' file
+
+Print lines between PAT1 and PAT2 - including PAT2
+$ awk 'flag; /PAT1/{flag=1} /PAT2/{flag=0}' file
+
+
+Print lines between PAT1 and PAT2 - excluding lines from the last PAT1 to the end of file if no other PAT2 occurs
+awk 'flag{
+        if (/PAT2/)
+           {printf "%s", buf; flag=0; buf=""}
+        else
+            buf = buf $0 ORS
+     }
+     /PAT1/ {flag=1}' file
+
+
+# 1849329
+That puts the regex itself in scalar context, which isn't what you want. Instead, put the regex in list context (to get the number of matches) and put that into scalar context.
+my $number = () = $string =~ /\./gi;
+
+# 174292
+delete a value from an array in Perl?
+my $index = 0;
+$index++ until $arr[$index] eq 'foo';
+splice(@arr, $index, 1);
+
+my @del_indexes = grep { $arr[$_] eq 'foo' } 0..$#arr;
+
+# 95820
+create a hash whose keys come from a given array?
+%hash = map { $_ => 1 } @array;
+
+
+# 1030787
+Multiline search replace with Perl
+perl -i -pe 's/START.*STOP/replace_string/g' file_to_change
+perl -i -pe 'BEGIN{undef $/;} s/START.*STOP/replace_string/smg' file_to_change
+
+
+# 896904
+sleep for a millisecond in Perl?
+use strict;
+use warnings;
+use Time::HiRes qw(usleep nanosleep);
+# 1 millisecond == 1000 microseconds
+usleep(1000);
+# 1 microsecond == 1000 nanoseconds
+nanosleep(1000000);
+
+
+# 471183
+perl -p -i -e 's/oldstring/newstring/g' `grep -ril searchpattern *`
+
+
+IMHO=In My Humble Opinion
+
+# 1814196
+use POSIX;
+print strftime "%F %T", localtime time;
+
+print strftime "%Y-%m-%d %H:%M:%S", localtime time;
+print strftime "%Y-%m-%d %H:%M:%S", gmtime time;
+
+
+# 1712016
+Use a module. Check out perldoc perlmod and Exporter.
+In file Foo.pm
+package Foo;
+use strict;
+use warnings;
+use Exporter;
+our @ISA= qw( Exporter );
+# these CAN be exported.
+our @EXPORT_OK = qw( export_me export_me_too );
+# these are exported by default.
+our @EXPORT = qw( export_me );
+sub export_me {
+    # stuff
+}
+sub export_me_too {
+    # stuff
+}
+1;
